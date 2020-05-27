@@ -1,0 +1,21 @@
+num  = [1 -6.9 13.4 -7.2];
+den  = [1 -1.3 0.47 -0.035];
+[mpsu,mpsd] = MPS(num,den);
+
+L =0.5;
+k = 200;
+f1 = 10;
+f2 = 30;
+n = 0:1/k:L-1/k;
+f = @(n) cos(2*pi*n*f1) + cos(2*pi*n*f2);
+s = fft(f(n));
+sd = filter(num,den,f(n));
+a = poly(mpsu(2:end));
+b = poly(mpsd);
+sc = filter(b,a,sd)/mpsu(1);
+subplot(321); stem(n,f(n));
+subplot(322); stem(n,abs(s));
+subplot(323); stem(n,sd);
+subplot(324); stem(n,abs(fft(sd)));
+subplot(325); stem(n,sc);
+subplot(326); stem(n,abs(fft(sc)));
